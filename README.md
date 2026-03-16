@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Changement climatique en France
 
-## Getting Started
+Dashboard interactif pour explorer 75 ans de données climatiques en France, avec projections jusqu'en 2100.
 
-First, run the development server:
+Réalisé dans le cadre du [défi data.gouv.fr](https://defis.data.gouv.fr/defis/changement-climatique).
+
+## Aperçu
+
+14 onglets : synthèse, températures (depuis 1851), anomalies, extrêmes, pluie, saisons, agriculture, émissions CO2, projections 2100 (TRACC + SSP), prédiction ML, scénarios ADEME, warming stripes, carte des stations, carte choroplèthe par département.
+
+## Installation et lancement
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. Cloner le repo
+git clone https://github.com/Slfire/climat-france.git
+cd climat-france
+
+# 2. Créer un environnement virtuel (recommandé)
+python -m venv venv
+source venv/bin/activate  # macOS/Linux
+# venv\Scripts\activate   # Windows
+
+# 3. Installer les dépendances
+pip install -r requirements.txt
+
+# 4. Lancer le dashboard
+streamlit run app.py
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Le dashboard s'ouvre automatiquement dans le navigateur sur http://localhost:8501.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Au premier lancement, les données sont téléchargées automatiquement depuis les serveurs Météo-France (~200 Mo). Elles sont ensuite mises en cache dans le dossier `data/`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Sources de données
 
-## Learn More
+| Source | Description |
+|--------|-------------|
+| [Météo-France — Données quotidiennes](https://www.data.gouv.fr/datasets/donnees-climatologiques-de-base-quotidiennes) | Températures, pluie, vent (10 départements) |
+| [Météo-France — LSH](https://www.data.gouv.fr/datasets/donnees-changement-climatique-lsh-longues-series-homogeneisees) | Séries homogénéisées (321 stations, depuis 1951) |
+| [CITEPA](https://www.data.gouv.fr/datasets/emissions-de-gaz-a-effet-de-serre-annuelles-par-secteur) | Émissions GES par département et secteur |
+| [TRACC](https://www.ecologie.gouv.fr/politiques-publiques/trajectoire-rechauffement-reference-ladaptation-changement-climatique-tracc) | Trajectoire officielle France (+4°C en 2100) |
+| [GIEC AR6](https://www.ipcc.ch/report/ar6/wg1/) | Scénarios SSP mondiaux |
+| [ADEME Transition(s) 2050](https://www.ademe.fr/les-futurs-en-transition/les-scenarios/) | 4 scénarios de neutralité carbone |
 
-To learn more about Next.js, take a look at the following resources:
+## Stack technique
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Python 3.10+**
+- **Streamlit** — interface web interactive
+- **Plotly** — graphiques et cartes
+- **Pandas / NumPy** — traitement de données
+- **scikit-learn** — prédictions ML (Ridge polynomiale + bootstrap)
+- **statsmodels** — courbes de tendance LOWESS
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Licence
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Données sous [Licence Ouverte 2.0](https://www.etalab.gouv.fr/licence-ouverte-open-licence/).
